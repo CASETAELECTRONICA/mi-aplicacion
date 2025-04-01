@@ -1,3 +1,3 @@
-Flask
-gunicorn
-sqlite3
+Flask==2.2.5
+gunicorn==20.1.0
+sqlite3  # (sqlite3 viene incluido con Python, pero se puede mencionar para claridad)

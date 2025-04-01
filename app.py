@@ -1,10 +1,9 @@
 from flask import Flask, render_template, request, jsonify
 import sqlite3
 
-# Define la aplicación antes de usar @app.route
 app = Flask(__name__)
 
-# Crear la base de datos si no existe
+# Función para crear la base de datos y la tabla (si no existen)
 def crear_tabla():
     conn = sqlite3.connect('equipos.db')
     cursor = conn.cursor()
@@ -21,6 +20,7 @@ def crear_tabla():
 
 @app.route('/')
 def formulario():
+    # Renderiza el formulario de registro
     return render_template('formulario.html')
 
 @app.route('/guardar', methods=['POST'])
@@ -28,7 +28,7 @@ def guardar_datos():
     numero_equipo = request.form['numero_equipo']
     puntuacion = request.form['puntuacion']
     estacion = request.form['estacion']
-    
+
     conn = sqlite3.connect('equipos.db')
     cursor = conn.cursor()
     cursor.execute('''
@@ -37,13 +37,14 @@ def guardar_datos():
     ''', (numero_equipo, puntuacion, estacion))
     conn.commit()
     conn.close()
+
     return "Datos guardados correctamente."
 
 @app.route('/ver-datos', methods=['GET'])
 def ver_datos():
     conn = sqlite3.connect('equipos.db')
     cursor = conn.cursor()
-    cursor.execute('SELECT * FROM Datos')
+    cursor.execute("SELECT * FROM Datos")
     registros = cursor.fetchall()
     conn.close()
     return jsonify(registros)
@@ -52,7 +53,7 @@ def ver_datos():
 def mostrar_registros():
     conn = sqlite3.connect('equipos.db')
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM Datos")  # Asegúrate de que 'Datos' sea el nombre correcto de la tabla
+    cursor.execute("SELECT * FROM Datos")
     registros = cursor.fetchall()
     conn.close()
     return render_template('registros.html', registros=registros)
