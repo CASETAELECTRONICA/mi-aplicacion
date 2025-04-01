@@ -1,23 +1,103 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
+  <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario</title>
-</head>
-<body>
-    <h1>Formulario de Registro</h1>
-    <form action="/guardar" method="POST">
-        <label for="numero_equipo">Número de equipo:</label>
-        <input type="number" name="numero_equipo" required><br><br>
+    <title>Rally PM3E - Formulario</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      .container {
+        max-width: 600px;
+        margin: auto;
+      }
+      input[type="number"] {
+        width: 70px;
+      }
+      .team-inputs {
+        margin-top: 20px;
+      }
+      hr {
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Ingreso de Resultados Rally</h1>
+      <form id="rally-form">
+        <label for="teams">Número de Equipos (1-50):</label>
+        <input type="number" id="teams" name="teams" min="1" max="50" required>
+        <br><br>
+        
+        <label for="stations">Número de Estaciones (1-11):</label>
+        <input type="number" id="stations" name="stations" min="1" max="11" required>
+        <br><br>
+        
+        <button type="button" onclick="generateTeamFields()">Generar Campos por Equipo</button>
+        
+        <div id="teams-input" class="team-inputs"></div>
+        <br>
+        <button type="submit">Enviar Resultados</button>
+      </form>
+    </div>
 
-        <label for="puntuacion">Puntuación:</label>
-        <input type="number" name="puntuacion" step="0.01" required><br><br>
-
-        <label for="estacion">Estación:</label>
-        <input type="text" name="estacion" required><br><br>
-
-        <button type="submit">Guardar</button>
-    </form>
-</body>
+    <script>
+      function generateTeamFields() {
+        const teams = parseInt(document.getElementById('teams').value, 10);
+        const stations = parseInt(document.getElementById('stations').value, 10);
+        if (isNaN(teams) || isNaN(stations)) {
+          return;
+        }
+        const container = document.getElementById('teams-input');
+        container.innerHTML = ""; // Limpiar campos previos
+        for (let t = 1; t <= teams; t++) {
+          const teamDiv = document.createElement('div');
+          teamDiv.innerHTML = `<h3>Equipo ${t}</h3>`;
+          for (let s = 1; s <= stations; s++) {
+            teamDiv.innerHTML += `
+              <label>Estación ${s} (0-100):</label>
+              <input type="number" name="team_${t}_station_${s}" min="0" max="100" required>
+              <br>
+            `;
+          }
+          container.appendChild(teamDiv);
+          container.appendChild(document.createElement('hr'));
+        }
+      }
+      
+      document.getElementById('rally-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const teams = parseInt(document.getElementById('teams').value, 10);
+        const stations = parseInt(document.getElementById('stations').value, 10);
+        const results = [];
+        
+        for (let t = 1; t <= teams; t++) {
+          let teamData = { scores: [] };
+          let total = 0;
+          for (let s = 1; s <= stations; s++) {
+            const inputField = document.querySelector(`input[name="team_${t}_station_${s}"]`);
+            const score = parseFloat(inputField.value);
+            if (isNaN(score) || score < 0 || score > 100) {
+              alert(`Por favor, ingresa un valor válido entre 0 y 100 para el Equipo ${t}, Estación ${s}.`);
+              return;
+            }
+            teamData.scores.push(score);
+            total += score;
+          }
+          teamData.average = total / stations;
+          results.push(teamData);
+        }
+        
+        localStorage.setItem("rallyResults", JSON.stringify({
+          teams: teams,
+          stations: stations,
+          results: results
+        }));
+        
+        window.location.href = "/ranking";
+      });
+    </script>
+  </body>
 </html>

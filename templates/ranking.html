@@ -1,31 +1,56 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
+  <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ranking</title>
-</head>
-<body>
+    <title>Rally PM3E - Ranking</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 20px;
+      }
+      th, td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
     <h1>Ranking de Equipos</h1>
-    <table border="1" style="width: 100%; text-align: center;">
-        <thead>
-            <tr>
-                <th>Número de Equipo</th>
-                <th>Estación</th>
-                <th>Total Puntos</th>
-                <th>Promedio</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for resultado in resultados %}
-            <tr>
-                <td>{{ resultado[0] }}</td>
-                <td>{{ resultado[1] }}</td>
-                <td>{{ resultado[2] }}</td>
-                <td>{{ resultado[3] }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</body>
+    <div id="rankingTable"></div>
+
+    <script>
+      const storedData = localStorage.getItem("rallyResults");
+      if (!storedData) {
+        document.getElementById("rankingTable").innerHTML = "<p>No hay datos disponibles. Ingresa primero los resultados.</p>";
+      } else {
+        const data = JSON.parse(storedData);
+        const teams = data.teams;
+        const stations = data.stations;
+        const results = data.results;
+        
+        let tableHtml = "<table><thead><tr><th>Equipo</th>";
+        for (let s = 1; s <= stations; s++) {
+          tableHtml += `<th>Esta.-${s}</th>`;
+        }
+        tableHtml += "<th>Punt. Total</th></tr></thead><tbody>";
+        
+        for (let t = 1; t <= teams; t++) {
+          tableHtml += `<tr><td>Equipo ${t}</td>`;
+          const teamData = results[t-1];
+          for (let s = 0; s < stations; s++) {
+            tableHtml += `<td>${teamData.scores[s]}</td>`;
+          }
+          tableHtml += `<td>${teamData.average.toFixed(2)}</td></tr>`;
+        }
+        tableHtml += "</tbody></table>";
+        document.getElementById("rankingTable").innerHTML = tableHtml;
+      }
+    </script>
+  </body>
 </html>
