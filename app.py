@@ -48,6 +48,18 @@ def ver_datos():
     conn.close()
     return jsonify(registros)
 
+# Ruta para ver los registros en una tabla HTML
+@app.route('/registros')
+def mostrar_registros():
+    # Conexión a la base de datos
+    conn = sqlite3.connect('equipos.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM Datos")  # Consulta todos los registros de la tabla Datos
+    registros = cursor.fetchall()
+    conn.close()
+    # Renderiza la tabla usando la plantilla registros.html
+    return render_template('registros.html', registros=registros)
+
 # Ruta para ver el ranking calculado
 @app.route('/ranking', methods=['GET'])
 def ranking():
