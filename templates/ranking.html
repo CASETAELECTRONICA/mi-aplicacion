@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking</title>
+</head>
+<body>
+    <h1>Ranking de Equipos</h1>
+    <table border="1" style="width: 100%; text-align: center;">
+        <thead>
+            <tr>
+                <th>Número de Equipo</th>
+                <th>Estación</th>
+                <th>Total Puntos</th>
+                <th>Promedio</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for resultado in resultados %}
+            <tr>
+                <td>{{ resultado[0] }}</td>
+                <td>{{ resultado[1] }}</td>
+                <td>{{ resultado[2] }}</td>
+                <td>{{ resultado[3] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

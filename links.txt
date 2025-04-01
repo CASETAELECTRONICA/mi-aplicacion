@@ -1,0 +1,8 @@
+registro:
+http://127.0.0.1:5000/
+
+datos en codigo:
+http://127.0.0.1:5000/ver-datos
+
+datos en tabla:
+http://127.0.0.1:5000/ranking

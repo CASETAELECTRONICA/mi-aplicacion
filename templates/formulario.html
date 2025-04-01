@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario</title>
+</head>
+<body>
+    <h1>Formulario de Registro</h1>
+    <form action="/guardar" method="POST">
+        <label for="numero_equipo">Número de equipo:</label>
+        <input type="number" name="numero_equipo" required><br><br>
+
+        <label for="puntuacion">Puntuación:</label>
+        <input type="number" name="puntuacion" step="0.01" required><br><br>
+
+        <label for="estacion">Estación:</label>
+        <input type="text" name="estacion" required><br><br>
+
+        <button type="submit">Guardar</button>
+    </form>
+</body>
+</html>
