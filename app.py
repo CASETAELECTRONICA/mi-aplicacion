@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 import sqlite3
 
+# Define la aplicación antes de usar @app.route
 app = Flask(__name__)
 
 # Crear la base de datos si no existe
@@ -38,7 +39,6 @@ def guardar_datos():
     conn.close()
     return "Datos guardados correctamente."
 
-# Ruta para ver los datos en formato JSON
 @app.route('/ver-datos', methods=['GET'])
 def ver_datos():
     conn = sqlite3.connect('equipos.db')
@@ -48,7 +48,15 @@ def ver_datos():
     conn.close()
     return jsonify(registros)
 
-# Ruta para ver el ranking calculado
+@app.route('/registros', methods=['GET'])
+def mostrar_registros():
+    conn = sqlite3.connect('equipos.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM Datos")  # Asegúrate de que 'Datos' sea el nombre correcto de la tabla
+    registros = cursor.fetchall()
+    conn.close()
+    return render_template('registros.html', registros=registros)
+
 @app.route('/ranking', methods=['GET'])
 def ranking():
     conn = sqlite3.connect('equipos.db')
