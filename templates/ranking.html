@@ -27,30 +27,31 @@
     <script>
       const storedData = localStorage.getItem("rallyResults");
       if (!storedData) {
-        document.getElementById("rankingTable").innerHTML = "<p>No hay datos disponibles. Ingresa primero los resultados.</p>";
-      } else {
-        const data = JSON.parse(storedData);
-        const teams = data.teams;
-        const stations = data.stations;
-        const results = data.results;
-        
-        let tableHtml = "<table><thead><tr><th>Equipo</th>";
-        for (let s = 1; s <= stations; s++) {
-          tableHtml += `<th>Esta.-${s}</th>`;
-        }
-        tableHtml += "<th>Punt. Total</th></tr></thead><tbody>";
-        
-        for (let t = 1; t <= teams; t++) {
-          tableHtml += `<tr><td>Equipo ${t}</td>`;
-          const teamData = results[t-1];
-          for (let s = 0; s < stations; s++) {
-            tableHtml += `<td>${teamData.scores[s]}</td>`;
-          }
-          tableHtml += `<td>${teamData.average.toFixed(2)}</td></tr>`;
-        }
-        tableHtml += "</tbody></table>";
-        document.getElementById("rankingTable").innerHTML = tableHtml;
+        document.getElementById("rankingTable").innerHTML = "<p>No hay datos disponibles. Ingresa primero los resultados en el formulario.</p>";
+        return;
       }
+
+      const data = JSON.parse(storedData);
+      const teams = data.teams;
+      const stations = data.stations;
+      const results = data.results;
+      
+      let tableHtml = "<table><thead><tr><th>Equipo</th>";
+      for (let s = 1; s <= stations; s++) {
+        tableHtml += `<th>Esta.-${s}</th>`;
+      }
+      tableHtml += "<th>Punt. Total</th></tr></thead><tbody>";
+      
+      for (let t = 1; t <= teams; t++) {
+        tableHtml += `<tr><td>Equipo ${t}</td>`;
+        const teamData = results[t-1];
+        for (let s = 0; s < stations; s++) {
+          tableHtml += `<td>${teamData.scores[s]}</td>`;
+        }
+        tableHtml += `<td>${teamData.average.toFixed(2)}</td></tr>`;
+      }
+      tableHtml += "</tbody></table>";
+      document.getElementById("rankingTable").innerHTML = tableHtml;
     </script>
   </body>
 </html>
