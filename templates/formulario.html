@@ -3,29 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <title>Formulario</title>
-  <script>
-    function validarFormulario() {
-      const numeroEquipo = document.getElementById("numero_equipo").value;
-      const estacion = document.getElementById("estacion").value;
-      const puntuacion = document.getElementById("puntuacion").value;
-
-      if (!numeroEquipo.trim() || !estacion.trim() || !puntuacion.trim()) {
-        alert("Por favor completa todos los campos.");
-        return false; // Detener el envío del formulario
-      }
-
-      if (puntuacion < 1 || puntuacion > 100) {
-        alert("La puntuación debe estar entre 1 y 100.");
-        return false; // Detener el envío del formulario
-      }
-
-      return true; // Permitir el envío del formulario
+  <style>
+    body {
+      font-size: 18px;
+      font-family: Arial, sans-serif;
     }
-  </script>
+    h1 {
+      font-size: 28px;
+      font-weight: bold;
+      text-align: left;
+    }
+    label, input, button {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 8px 15px;
+    }
+    .mensaje {
+      font-size: 18px;
+      color: red;
+      margin-bottom: 20px;
+    }
+    .mensaje.exito {
+      color: green;
+    }
+  </style>
 </head>
 <body>
   <h1>Formulario de Registro</h1>
-  <form id="registro-form" action="/guardar" method="POST" onsubmit="return validarFormulario()">
+  {% if mensaje %}
+    <p class="mensaje {% if 'Error' not in mensaje %}exito{% endif %}">{{ mensaje }}</p>
+  {% endif %}
+  <form id="registro-form" action="/guardar" method="POST">
     <label for="numero_equipo">Número de Equipo:</label>
     <input type="number" id="numero_equipo" name="numero_equipo" required>
     <br><br>
@@ -33,11 +43,13 @@
     <input type="number" id="estacion" name="estacion" required>
     <br><br>
     <label for="puntuacion">Puntuación:</label>
-    <input type="number" id="puntuacion" name="puntuacion" min="1" max="100" required>
+    <input type="number" id="puntuacion" name="puntuacion" required>
     <br><br>
     <button type="submit">Guardar</button>
   </form>
   <br>
-  <a href="/registros">Ver Registros</a> | <a href="/ranking">Ver Ranking</a>
+  <a href="/validar_nip">Configuración del Sistema</a> | 
+  <a href="/registros">Ver Registros</a> | 
+  <a href="/ranking">Ver Ranking</a>
 </body>
 </html>

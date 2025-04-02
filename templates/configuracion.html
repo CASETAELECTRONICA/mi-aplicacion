@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Configuración del Sistema</title>
+  <style>
+    body {
+      font-size: 18px;
+      font-family: Arial, sans-serif;
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: bold;
+      text-align: left; /* Título alineado a la izquierda */
+    }
+    h2, h3 {
+      font-size: 22px;
+      font-weight: bold;
+      text-align: left; /* Subtítulos alineados a la izquierda */
+    }
+    button {
+      font-size: 16px;
+      padding: 8px 15px;
+    }
+    input, label {
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Configuración del Sistema</h1>
+  {% if mensaje %}
+    <p style="color: green;">{{ mensaje }}</p>
+  {% endif %}
+  <form action="/configuracion" method="POST">
+    <label for="numero_equipos">Número de Equipos:</label>
+    <input type="number" id="numero_equipos" name="numero_equipos" value="{{ configuracion[1] }}" required>
+    <br><br>
+    <label for="numero_estaciones">Número de Estaciones:</label>
+    <input type="number" id="numero_estaciones" name="numero_estaciones" value="{{ configuracion[2] }}" required>
+    <br><br>
+    <label for="calificacion_maxima">Calificación Máxima:</label>
+    <input type="number" id="calificacion_maxima" name="calificacion_maxima" value="{{ configuracion[3] }}" required>
+    <br><br>
+    <label for="nip_borrado">NIP para Borrar Registros:</label>
+    <input type="text" id="nip_borrado" name="nip_borrado" value="{{ configuracion[4] }}" required>
+    <br><br>
+    <button type="submit">Guardar Configuración</button>
+  </form>
+  <br>
+  <a href="/">Volver al formulario</a> | 
+  <a href="/registros">Ver Registros</a> | 
+  <a href="/ranking">Ver Ranking</a>
+</body>
+</html>

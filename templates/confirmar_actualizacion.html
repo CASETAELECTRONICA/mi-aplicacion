@@ -3,16 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <title>Confirmar Actualización</title>
+  <style>
+    body {
+      font-size: 18px;
+      font-family: Arial, sans-serif;
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: bold;
+      text-align: left;
+    }
+    p {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    form {
+      margin-top: 20px;
+    }
+    button {
+      font-size: 16px;
+      padding: 8px 15px;
+    }
+    a {
+      font-size: 18px;
+      text-decoration: none;
+      margin-top: 10px;
+      display: inline-block;
+    }
+  </style>
 </head>
 <body>
   <h1>Confirmar Actualización</h1>
-  <p>El equipo <strong>{{ numero_equipo }}</strong> en la estación <strong>{{ estacion }}</strong> ya tiene un registro.</p>
-  <p>¿Deseas actualizarlo con la nueva puntuación <strong>{{ puntuacion }}</strong>?</p>
+  <p>Ya existe un registro para el equipo <strong>{{ numero_equipo }}</strong> en la estación <strong>{{ estacion }}</strong>.</p>
+  <p>¿Desea actualizar la puntuación a <strong>{{ puntuacion }}</strong>?</p>
   <form action="/actualizar" method="POST">
     <input type="hidden" name="numero_equipo" value="{{ numero_equipo }}">
     <input type="hidden" name="estacion" value="{{ estacion }}">
     <input type="hidden" name="puntuacion" value="{{ puntuacion }}">
-    <button type="submit">Aceptar</button>
+    <button type="submit">Confirmar Actualización</button>
   </form>
   <br>
   <a href="/">Cancelar</a>

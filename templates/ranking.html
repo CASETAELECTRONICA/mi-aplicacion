@@ -2,24 +2,46 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Ranking por Equipo</title>
+  <title>Ranking</title>
+  <style>
+    body {
+      font-size: 18px;
+      font-family: Arial, sans-serif;
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: bold;
+      text-align: left;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      font-size: 18px;
+      text-align: center;
+      border: 1px solid #000;
+      padding: 10px;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    a {
+      font-size: 18px;
+      text-decoration: none;
+      margin-top: 20px;
+      display: inline-block;
+    }
+  </style>
 </head>
 <body>
-  <h1>Ranking de Equipos
-    <form action="/eliminar" method="POST" style="display: inline;">
-      <input type="password" id="nip" name="nip" placeholder="NIP" required style="width: 80px; font-size: 12px; text-align: center;">
-      <button type="submit" style="margin-left: 10px;">Eliminar Todos los Registros</button>
-    </form>
-  </h1>
-  {% if mensaje %}
-    <p style="color: red;">{{ mensaje }}</p>
-  {% endif %}
+  <h1>Ranking de Equipos</h1>
   {% if resultados %}
-    <table border="1" style="width: 100%; text-align: center; border-collapse: collapse;">
+    <table>
       <thead>
         <tr>
           <th>Lugar</th>
-          <th>Número de Equipo</th>
+          <th>N° de Equipo</th>
           <th>Número de Estaciones</th>
           <th>Total de Puntos</th>
           <th>Promedio</th>
@@ -29,17 +51,18 @@
         {% for resultado in resultados %}
           <tr>
             <td>{{ resultado[4] }}</td> <!-- Lugar -->
-            <td>{{ resultado[0] }}</td> <!-- Número de Equipo -->
+            <td>{{ resultado[0] }}</td> <!-- N° de Equipo -->
             <td>{{ resultado[1] }}</td> <!-- Número de Estaciones -->
             <td>{{ resultado[2] }}</td> <!-- Total de Puntos -->
-            <td>{{ "%.2f" % resultado[3] }}</td> <!-- Promedio -->
+            <td>{{ "%.2f"|format(resultado[3]) }}</td> <!-- Promedio -->
           </tr>
         {% endfor %}
       </tbody>
     </table>
   {% else %}
-    <p>No hay datos disponibles en el ranking.</p>
+    <p>No hay registros disponibles para mostrar el ranking.</p>
   {% endif %}
-  <a href="/">Volver al formulario</a> | <a href="/registros">Ver Registros</a>
+  <br>
+  <a href="/">Volver al inicio</a>
 </body>
 </html>
