@@ -97,6 +97,21 @@ def ranking():
     conn.close()
     return render_template('ranking.html', resultados=ranking_con_lugares)
 
+@app.route('/eliminar', methods=['POST'])
+def eliminar_registros():
+    nip = request.form['nip']
+    if nip == "2307":
+        conn = sqlite3.connect('equipos.db')
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM Datos")  # Eliminar todos los registros de la tabla
+        conn.commit()
+        conn.close()
+        mensaje = "Todos los registros han sido eliminados correctamente."
+    else:
+        mensaje = "NIP incorrecto. No se eliminaron los registros."
+    
+    return render_template('ranking.html', resultados=[], mensaje=mensaje)
+
 @app.route('/debug-registros', methods=['GET'])
 def debug_registros():
     try:

@@ -5,7 +5,15 @@
   <title>Ranking por Equipo</title>
 </head>
 <body>
-  <h1>Ranking de Equipos</h1>
+  <h1>Ranking de Equipos
+    <form action="/eliminar" method="POST" style="display: inline;">
+      <input type="password" id="nip" name="nip" placeholder="NIP" required style="width: 80px; font-size: 12px; text-align: center;">
+      <button type="submit" style="margin-left: 10px;">Eliminar Todos los Registros</button>
+    </form>
+  </h1>
+  {% if mensaje %}
+    <p style="color: red;">{{ mensaje }}</p>
+  {% endif %}
   {% if resultados %}
     <table border="1" style="width: 100%; text-align: center; border-collapse: collapse;">
       <thead>
