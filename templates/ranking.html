@@ -1,43 +1,37 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8">
-    <title>Rally PM3E - Ranking</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
-      }
-      table {
-        border-collapse: collapse;
-        width: 100%;
-        margin-top: 20px;
-      }
-      th, td {
-        border: 1px solid #ccc;
-        padding: 8px;
-        text-align: center;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>Ranking de Equipos</h1>
-    <div id="rankingTable"></div>
-
-    <script>
-      const storedData = localStorage.getItem("rallyResults");
-      if (!storedData) {
-        document.getElementById("rankingTable").innerHTML = "<p>No hay datos disponibles.</p>";
-      } else {
-        const results = JSON.parse(storedData);
-        let tableHtml = "<table><thead><tr><th>Equipo</th><th>Puntajes</th></tr></thead><tbody>";
-        for (let i = 0; i < results.length; i++) {
-          tableHtml += `<tr><td>Equipo ${i + 1}</td>`;
-          tableHtml += `<td>${results[i].scores.join(", ")}</td></tr>`;
-        }
-        tableHtml += "</tbody></table>";
-        document.getElementById("rankingTable").innerHTML = tableHtml;
-      }
-    </script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <title>Ranking por Equipo</title>
+</head>
+<body>
+  <h1>Ranking de Equipos</h1>
+  {% if resultados %}
+    <table border="1" style="width: 100%; text-align: center; border-collapse: collapse;">
+      <thead>
+        <tr>
+          <th>Lugar</th>
+          <th>Número de Equipo</th>
+          <th>Número de Estaciones</th>
+          <th>Total de Puntos</th>
+          <th>Promedio</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for resultado in resultados %}
+          <tr>
+            <td>{{ resultado[4] }}</td> <!-- Lugar -->
+            <td>{{ resultado[0] }}</td> <!-- Número de Equipo -->
+            <td>{{ resultado[1] }}</td> <!-- Número de Estaciones -->
+            <td>{{ resultado[2] }}</td> <!-- Total de Puntos -->
+            <td>{{ "%.2f" % resultado[3] }}</td> <!-- Promedio -->
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No hay datos disponibles en el ranking.</p>
+  {% endif %}
+  <a href="/">Volver al formulario</a> | <a href="/registros">Ver Registros</a>
+</body>
 </html>

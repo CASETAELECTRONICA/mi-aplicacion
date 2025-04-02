@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Confirmar Actualización</title>
+</head>
+<body>
+  <h1>Confirmar Actualización</h1>
+  <p>El equipo <strong>{{ numero_equipo }}</strong> en la estación <strong>{{ estacion }}</strong> ya tiene un registro.</p>
+  <p>¿Deseas actualizarlo con la nueva puntuación <strong>{{ puntuacion }}</strong>?</p>
+  <form action="/actualizar" method="POST">
+    <input type="hidden" name="numero_equipo" value="{{ numero_equipo }}">
+    <input type="hidden" name="estacion" value="{{ estacion }}">
+    <input type="hidden" name="puntuacion" value="{{ puntuacion }}">
+    <button type="submit">Aceptar</button>
+  </form>
+  <br>
+  <a href="/">Cancelar</a>
+</body>
+</html>
