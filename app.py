@@ -200,16 +200,18 @@ def ranking():
 
 @app.route('/eliminar', methods=['POST'])
 def eliminar_registros():
-    nip = request.form['nip']
+    nip = request.form['nip']  # Obtener el NIP ingresado
 
     conn = sqlite3.connect('equipos.db')
     cursor = conn.cursor()
+
+    # Obtener el NIP correcto desde la configuración
     cursor.execute('SELECT nip_borrado FROM Configuracion LIMIT 1')
     nip_correcto = cursor.fetchone()[0]
 
     mensaje = ""
     if nip == nip_correcto:
-        cursor.execute("DELETE FROM Datos")
+        cursor.execute("DELETE FROM Datos")  # Eliminar todos los registros
         conn.commit()
         mensaje = "Todos los registros han sido eliminados correctamente."
     else:

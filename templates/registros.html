@@ -23,28 +23,60 @@
       border: 1px solid #000;
       padding: 10px;
     }
-    button {
+    th {
+      background-color: #f2f2f2;
+    }
+    .mensaje {
+      font-size: 18px;
+      color: red;
+      margin-bottom: 20px;
+    }
+    .mensaje.exito {
+      color: green;
+    }
+    form {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+    input, button {
       font-size: 16px;
-      padding: 8px 15px;
+      margin-bottom: 15px;
+      padding: 8px;
+    }
+    button {
+      cursor: pointer;
+    }
+    a {
+      font-size: 18px;
+      text-decoration: none;
+      margin-top: 20px;
+      display: inline-block;
     }
   </style>
 </head>
 <body>
-  <h1>Registros</h1>
+  <h1>Registros de Equipos</h1>
+  {% if mensaje %}
+    <p class="mensaje {% if 'incorrecto' not in mensaje %}exito{% endif %}">{{ mensaje }}</p>
+  {% endif %}
   {% if registros %}
     <table>
       <thead>
         <tr>
           <th>N° de Equipo</th>
-          <th>Estaciones</th>
+          <th>Cantidad de Estaciones</th>
           <th>Puntuaciones</th>
         </tr>
       </thead>
       <tbody>
         {% for registro in registros %}
           <tr>
-            <td>{{ registro[0] }}</td> <!-- Número de Equipo -->
-            <td>{{ registro[1] }}</td> <!-- Cantidad de Estaciones -->
+            <td>{{ registro[0] }}</td> <!-- Número de equipo -->
+            <td>{{ registro[1] }}</td> <!-- Cantidad de estaciones -->
             <td>{{ registro[2] }}</td> <!-- Puntuaciones -->
           </tr>
         {% endfor %}
@@ -54,13 +86,13 @@
     <p>No hay registros disponibles.</p>
   {% endif %}
   <br>
+  <!-- Formulario para eliminar registros -->
   <form action="/eliminar" method="POST">
     <label for="nip">NIP para borrar registros:</label>
     <input type="password" id="nip" name="nip" required>
     <button type="submit">Eliminar Todos los Registros</button>
   </form>
   <br>
-  <a href="/">Volver al formulario</a> | 
-  <a href="/ranking">Ver Ranking</a>
+  <a href="/">Volver al inicio</a>
 </body>
 </html>
