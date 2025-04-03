@@ -172,22 +172,27 @@ def mostrar_registros():
 def ranking():
     conn = sqlite3.connect('equipos.db')
     cursor = conn.cursor()
+
+    # Obtener el número máximo de estaciones desde la configuración
+    cursor.execute('SELECT numero_estaciones FROM Configuracion LIMIT 1')
+    numero_maximo_estaciones = cursor.fetchone()[0]
+
     cursor.execute('''
         SELECT numero_equipo,
                COUNT(DISTINCT estacion) AS num_estaciones,
-               SUM(puntuacion) AS total_puntos,
-               (SUM(puntuacion) * 1.0 / COUNT(DISTINCT estacion)) AS promedio
+               SUM(puntuacion) AS total_puntos
         FROM Datos
         GROUP BY numero_equipo
-        ORDER BY promedio DESC
+        ORDER BY total_puntos DESC
     ''')
     resultados = cursor.fetchall()
 
-    # Agregar lógica para calcular los lugares
+    # Calcular el promedio usando el número máximo de estaciones configurado
     ranking_con_lugares = []
     lugar = 1
     for resultado in resultados:
-        ranking_con_lugares.append((*resultado, f"{lugar}°"))  # Añadir el lugar al resultado
+        promedio = resultado[2] / numero_maximo_estaciones  # Usar número máximo de estaciones para el promedio
+        ranking_con_lugares.append((*resultado, promedio, f"{lugar}°"))  # Añadir el promedio y el lugar
         lugar += 1
 
     conn.close()
