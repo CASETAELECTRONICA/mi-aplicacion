@@ -16,35 +16,31 @@
     form {
       margin-top: 20px;
     }
-    label, input, button {
+    label, input {
       font-size: 18px;
       display: block;
-      margin-bottom: 15px;
-    }
-    input, button {
-      padding: 8px 15px;
+      margin-bottom: 10px;
     }
     button {
-      cursor: pointer;
+      font-size: 16px;
+      padding: 8px 15px;
     }
-    a {
-      font-size: 18px;
-      text-decoration: none;
-      margin-top: 20px;
-      display: inline-block;
+    .error {
+      color: red;
+      font-size: 16px;
     }
   </style>
 </head>
 <body>
-  <h1>Validar NIP</h1>
-  <form method="POST">
-    <label for="nip">Ingresa tu NIP:</label>
+  <h1>Validación de NIP</h1>
+  {% if mensaje %}
+    <p class="error">{{ mensaje }}</p>
+  {% endif %}
+  <form action="/validar_nip" method="POST">
+    <label for="nip">Ingresa el NIP para acceder:</label>
     <input type="password" id="nip" name="nip" required>
     <button type="submit">Validar</button>
   </form>
-  {% if mensaje %}
-    <p>{{ mensaje }}</p>
-  {% endif %}
   <br>
   <a href="/">Volver al inicio</a>
 </body>

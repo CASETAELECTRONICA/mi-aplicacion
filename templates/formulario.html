@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Inicio</title>
+  <title>Formulario</title>
   <style>
     body {
       font-size: 18px;
@@ -13,48 +13,43 @@
       font-weight: bold;
       text-align: left;
     }
-    a {
-      font-size: 18px;
-      text-decoration: none;
-      margin-right: 20px;
-    }
-    form {
-      margin-top: 20px;
-    }
     label, input, button {
       font-size: 18px;
-      display: block;
-      margin-bottom: 15px;
-    }
-    input, button {
-      padding: 8px 15px;
+      margin-bottom: 10px;
     }
     button {
-      cursor: pointer;
+      padding: 8px 15px;
+    }
+    .mensaje {
+      font-size: 18px;
+      color: red;
+      margin-bottom: 20px;
+    }
+    .mensaje.exito {
+      color: green;
     }
   </style>
 </head>
 <body>
-  <!-- Encabezado actualizado -->
-  <h1>Rally Ingeniería Electrónica 2025</h1>
-  <a href="/validar_nip">Configuración</a>
-  <a href="/validar_nip_registros">Registros</a>
-  <a href="/ranking">Ver Ranking</a>
-  <a href="/validar_nip_mantenimiento">Mantenimiento</a>
-
-  <!-- Formulario de registro siempre visible -->
-  <form action="/guardar" method="POST">
-    <h2>Formulario de Registro</h2>
-    <label for="numero_equipo">N° de Equipo:</label>
+  <h1>Formulario de Registro</h1>
+  {% if mensaje %}
+    <p class="mensaje {% if 'Error' not in mensaje %}exito{% endif %}">{{ mensaje }}</p>
+  {% endif %}
+  <form id="registro-form" action="/guardar" method="POST">
+    <label for="numero_equipo">Número de Equipo:</label>
     <input type="number" id="numero_equipo" name="numero_equipo" required>
-    
+    <br><br>
     <label for="estacion">Estación:</label>
     <input type="number" id="estacion" name="estacion" required>
-    
+    <br><br>
     <label for="puntuacion">Puntuación:</label>
     <input type="number" id="puntuacion" name="puntuacion" required>
-    
+    <br><br>
     <button type="submit">Guardar</button>
   </form>
+  <br>
+  <a href="/validar_nip">Configuración del Sistema</a> | 
+  <a href="/registros">Ver Registros</a> | 
+  <a href="/ranking">Ver Ranking</a>
 </body>
 </html>

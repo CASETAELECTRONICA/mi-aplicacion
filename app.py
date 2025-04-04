@@ -79,50 +79,70 @@ def guardar_datos():
     conn.close()
     return render_template('formulario.html', configuracion=configuracion, mensaje=mensaje)
 
+@app.route('/actualizar', methods=['POST'])
+def actualizar_datos():
+    numero_equipo = int(request.form['numero_equipo'])
+    estacion = int(request.form['estacion'])
+    puntuacion = float(request.form['puntuacion'])
+
+    conn = sqlite3.connect('equipos.db')
+    cursor = conn.cursor()
+
+    cursor.execute('UPDATE Datos SET puntuacion = ? WHERE numero_equipo = ? AND estacion = ?', 
+                   (puntuacion, numero_equipo, estacion))
+    conn.commit()
+    conn.close()
+
+    mensaje = f"Registro actualizado: Equipo {numero_equipo}, Estación {estacion}, Puntuación {puntuacion}."
+    conn = sqlite3.connect('equipos.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM Configuracion LIMIT 1')
+    configuracion = cursor.fetchone()
+    conn.close()
+    return render_template('formulario.html', configuracion=configuracion, mensaje=mensaje)
+
 @app.route('/validar_nip', methods=['GET', 'POST'])
 def validar_nip():
     mensaje = ""
-    nip_fijo = "0723"
-
     if request.method == 'POST':
-        nip_ingresado = request.form['nip']
+        nip = request.form['nip']
 
-        if nip_ingresado == nip_fijo:
+        conn = sqlite3.connect('equipos.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT nip_borrado FROM Configuracion LIMIT 1')
+        nip_correcto = cursor.fetchone()[0]
+        conn.close()
+
+        if nip == nip_correcto:
             return redirect('/configuracion')
         else:
             mensaje = "NIP incorrecto. Intenta de nuevo."
 
     return render_template('validar_nip.html', mensaje=mensaje)
 
-@app.route('/validar_nip_registros', methods=['GET', 'POST'])
-def validar_nip_registros():
+@app.route('/configuracion', methods=['GET', 'POST'])
+def configuracion():
+    conn = sqlite3.connect('equipos.db')
+    cursor = conn.cursor()
+
     mensaje = ""
-    nip_fijo = "0723"
-
     if request.method == 'POST':
-        nip_ingresado = request.form['nip']
+        numero_equipos = int(request.form['numero_equipos'])
+        numero_estaciones = int(request.form['numero_estaciones'])
+        calificacion_maxima = int(request.form['calificacion_maxima'])
+        nip_borrado = request.form['nip_borrado']
+        cursor.execute('''
+            UPDATE Configuracion
+            SET numero_equipos = ?, numero_estaciones = ?, calificacion_maxima = ?, nip_borrado = ?
+            WHERE id = 1
+        ''', (numero_equipos, numero_estaciones, calificacion_maxima, nip_borrado))
+        conn.commit()
+        mensaje = "Configuración Guardada"
 
-        if nip_ingresado == nip_fijo:
-            return redirect('/registros')
-        else:
-            mensaje = "NIP incorrecto. Intenta de nuevo."
-
-    return render_template('validar_nip.html', mensaje=mensaje)
-
-@app.route('/validar_nip_mantenimiento', methods=['GET', 'POST'])
-def validar_nip_mantenimiento():
-    mensaje = ""
-    nip_fijo = "0723"
-
-    if request.method == 'POST':
-        nip_ingresado = request.form['nip']
-
-        if nip_ingresado == nip_fijo:
-            return redirect('/mantenimiento')
-        else:
-            mensaje = "NIP incorrecto. Intenta de nuevo."
-
-    return render_template('validar_nip.html', mensaje=mensaje)
+    cursor.execute('SELECT * FROM Configuracion LIMIT 1')
+    configuracion_actual = cursor.fetchone()
+    conn.close()
+    return render_template('configuracion.html', configuracion=configuracion_actual, mensaje=mensaje)
 
 @app.route('/registros', methods=['GET'])
 def mostrar_registros():
@@ -133,41 +153,13 @@ def mostrar_registros():
         SELECT numero_equipo,
                COUNT(DISTINCT estacion) AS cantidad_estaciones,
                GROUP_CONCAT(puntuacion || ' (Estación ' || estacion || ')', ', ') AS puntuaciones
-        FROM Datos WHERE estacion != 'Mantenimiento'
+        FROM Datos
         GROUP BY numero_equipo
         ORDER BY numero_equipo ASC
     ''')
     registros = cursor.fetchall()
     conn.close()
     return render_template('registros.html', registros=registros)
-
-@app.route('/mantenimiento', methods=['GET', 'POST'])
-def mantenimiento():
-    mensaje = ""
-    if request.method == 'POST':
-        numero_equipo = int(request.form['numero_equipo'])
-        puntuacion = float(request.form['puntuacion'])
-        
-        conn = sqlite3.connect('equipos.db')
-        cursor = conn.cursor()
-
-        cursor.execute('SELECT SUM(puntuacion) FROM Datos WHERE numero_equipo = ?', (numero_equipo,))
-        total_actual = cursor.fetchone()[0]
-
-        if total_actual is None:
-            total_actual = 0
-
-        nuevo_total = total_actual + puntuacion
-
-        cursor.execute('INSERT INTO Datos (numero_equipo, puntuacion, estacion) VALUES (?, ?, ?)',
-                       (numero_equipo, puntuacion, 'Mantenimiento'))
-
-        conn.commit()
-        conn.close()
-
-        mensaje = f"Puntuación actualizada: El equipo {numero_equipo} ahora tiene un total de {nuevo_total} puntos."
-
-    return render_template('mantenimiento.html', mensaje=mensaje)
 
 @app.route('/ranking', methods=['GET'])
 def ranking():
@@ -176,7 +168,7 @@ def ranking():
 
     cursor.execute('''
         SELECT numero_equipo,
-               COUNT(DISTINCT CASE WHEN estacion != 'Mantenimiento' THEN estacion END) AS num_estaciones,
+               COUNT(DISTINCT estacion) AS num_estaciones,
                SUM(puntuacion) AS total_puntos
         FROM Datos
         GROUP BY numero_equipo
@@ -187,11 +179,42 @@ def ranking():
     ranking_con_lugares = []
     lugar = 1
     for resultado in resultados:
-        ranking_con_lugares.append((*resultado, f"{lugar}°"))
+        ranking_con_lugares.append((*resultado, f"{lugar}°"))  # Lugar basado en total de puntos
         lugar += 1
 
     conn.close()
     return render_template('ranking.html', resultados=ranking_con_lugares)
+
+@app.route('/eliminar', methods=['POST'])
+def eliminar_registros():
+    nip = request.form['nip']
+
+    conn = sqlite3.connect('equipos.db')
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT nip_borrado FROM Configuracion LIMIT 1')
+    nip_correcto = cursor.fetchone()[0]
+
+    mensaje = ""
+    if nip == nip_correcto:
+        cursor.execute("DELETE FROM Datos")
+        conn.commit()
+        mensaje = "Todos los registros han sido eliminados correctamente."
+    else:
+        mensaje = "NIP incorrecto. No se eliminaron los registros."
+
+    cursor.execute('''
+        SELECT numero_equipo,
+               COUNT(DISTINCT estacion) AS num_estaciones,
+               SUM(puntuacion) AS total_puntos
+        FROM Datos
+        GROUP BY numero_equipo
+        ORDER BY total_puntos DESC
+    ''')
+    resultados = cursor.fetchall()
+    conn.close()
+
+    return render_template('ranking.html', resultados=resultados, mensaje=mensaje)
 
 if __name__ == '__main__':
     crear_tabla()
