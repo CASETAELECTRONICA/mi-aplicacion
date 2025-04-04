@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Validar NIP</title>
+  <title>Mantenimiento</title>
   <style>
     body {
       font-size: 18px;
@@ -36,11 +36,17 @@
   </style>
 </head>
 <body>
-  <h1>Validar NIP</h1>
+  <h1></h1>
   <form method="POST">
-    <label for="nip">Ingresa tu NIP:</label>
-    <input type="password" id="nip" name="nip" required>
-    <button type="submit">Validar</button>
+    <!-- Restauración del título y los campos -->
+    <h2>Máquina de toques</h2>
+    <label for="numero_equipo">N° de Equipo:</label>
+    <input type="number" id="numero_equipo" name="numero_equipo" required>
+    
+    <label for="puntuacion">Puntuación:</label>
+    <input type="number" id="puntuacion" name="puntuacion" required>
+
+    <button type="submit">Guardar</button>
   </form>
   {% if mensaje %}
     <p>{{ mensaje }}</p>

@@ -44,17 +44,15 @@
           <th>N° de Equipo</th>
           <th>Número de Estaciones</th>
           <th>Total de Puntos</th>
-          <th>Promedio</th>
         </tr>
       </thead>
       <tbody>
         {% for resultado in resultados %}
           <tr>
-            <td>{{ resultado[4] }}</td> <!-- Lugar -->
+            <td>{{ resultado[3] }}</td> <!-- Lugar -->
             <td>{{ resultado[0] }}</td> <!-- N° de Equipo -->
             <td>{{ resultado[1] }}</td> <!-- Número de Estaciones -->
             <td>{{ resultado[2] }}</td> <!-- Total de Puntos -->
-            <td>{{ "%.2f"|format(resultado[3]) }}</td> <!-- Promedio -->
           </tr>
         {% endfor %}
       </tbody>
